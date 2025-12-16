@@ -1,0 +1,7 @@
+{
+  "name": "Sổ Thu Chi AI",
+  "description": "A smart personal finance tracker that integrates with Google Sheets via Apps Script. Features manual entry and AI-powered natural language parsing for quick transaction logging.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
