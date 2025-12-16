@@ -1,27 +1,23 @@
-import { TransactionPayload, GASResponse } from '../types';
+export const saveTransactionToSheet = async (transaction: { lydo: string; thu: number; chi: number }) => {
+  // Đây là URL Web App của bạn
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXCEFDDimAAxeDvh06Z__0mVY4x5BC9LcYIbYX__rXWrWmhsB_uEQazu5i08LUToD6/exec";
 
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxXCEFDDimAAxeDvh06Z__0mVY4x5BC9LcYIbYX__rXWrWmhsB_uEQazu5i08LUToD6/exec";
-
-export const submitTransaction = async (payload: TransactionPayload): Promise<GASResponse> => {
   try {
-    // Using mode: 'no-cors' as requested.
-    // This allows the request to be sent to Google Apps Script without CORS errors,
-    // but the response will be "opaque" (status 0, unreadable body).
-    await fetch(GAS_URL, {
+    // Sử dụng no-cors để gửi dữ liệu một chiều mà không bị trình duyệt chặn
+    await fetch(WEB_APP_URL, {
       method: "POST",
-      mode: "no-cors",
+      mode: "no-cors", 
       headers: {
-        // Content-Type 'application/json' is not allowed in no-cors mode.
-        // We use 'text/plain', and GAS should parse the postData.contents.
-        "Content-Type": "text/plain", 
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(transaction),
     });
-
-    // Since we cannot read the response in no-cors mode, we assume success if no network error occurred.
-    return { result: "success" };
+    
+    // Vì no-cors không trả về kết quả, ta mặc định là thành công nếu không có lỗi mạng
+    console.log("Đã gửi lệnh lưu đến Google Sheet");
+    return true;
   } catch (error) {
-    console.error("Error submitting transaction:", error);
-    throw error;
+    console.error("Lỗi khi lưu vào Sheet:", error);
+    return false;
   }
 };
